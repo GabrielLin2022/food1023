@@ -1,0 +1,22 @@
+* {
+    margin:0;
+    padding:0;
+    color:rgb(11, 11, 11)
+}
+
+* body {
+    background-image: url("../images/bg.jpg!con");
+    background-color: rgba(109, 107, 107, 0.217);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-blend-mode: multiply;
+    margin: 30px;
+}
+
+* body .container {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(246, 116, 29, 0.516);
+}

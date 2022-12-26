@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% extends 'base.html' %} {#繼承'base.html' #}
+{% load static %} {#載入'load static' #}
+{% block content %} {#建立 content 區塊 #}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>痞客邦網路爬蟲</title>
+<link type="text/css" rel="stylesheet" href="{% static 'css/oct.css'%}"> <!--連結CSS-->   
+    
+</head>
+<body>
+    <form action="" method="Post"><!--Post方法-->
+        {% csrf_token %}<!--以Post的方式傳送，必須以{% csrf_token %}啟動CSRF防護，避免伺服器被攻擊-->
+        <div class="form-row">
+            <div class="form-group col-11">
+                <input class="form-control" name="restaurant_name" placeholder="請輸入餐廳名稱">
+            </div>
+            <div class="form-group col-1">
+                <input class="btn btn-dark" type="submit" value="查詢">
+            </div>
+        </div>
+    </form>
+    <table class="table table-hover">
+        <thead>
+            <tr> <!-- 欄位標題 -->
+                <th></th>
+                <th>作者</th>
+                <th>標題</th>
+                <th>點擊次數</th>
+                <th>來源網站</th>
+            </tr>
+        </thead>
+        <tbody>  <!-- 爬取的內容 -->
+            {% for article in articles %}
+            <tr>
+                <td><img src={{ article.avatar }} style="border-radius: 50%;" /></td>
+                <td>
+                    {{ article.author }}
+                </td>
+                <td>
+                    <a href="{{ article.link }}" target="_blank">{{ article.title }}</a>
+                </td>
+                <td>{{ article.hit }}</td>
+                <td>{{ article.source }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+</html>
+</body>
+<!--
+簡介 CSRF
+{% csrf_token %}，這是什麼？CSRF 全名 Cross-Site Request Forgery，中文常翻為跨站請求攻擊或跨站偽造請求，
+這是利用 Web 應用程式在設計 HTTP 請求時，因為考量不周全造成的漏洞，從而進行攻擊的手法，通常是在 Web 應用程式站外
+的其他頁面中，包括惡意程式碼或鏈結，當使用者已通過驗證且會話（Session）未過期時，瀏覽該頁面或點選該惡意鏈結，
+就會造成攻擊成功的可能性。
+
+一個 CSRF 攻擊的情境範例會像是 ...
+Bob 登入了 www.webapp.com，並且會話尚未過期。
+Bob 瀏覽了另一個頁面，這個頁面中包括了惡意駭客置入的 <img src="http://www.webapp.com/project/1/destroy">，
+然後 Bob 的某個專案就莫名奇妙被刪除了。
+Bob 瀏覽的頁面是不是跟 www.webapp.com 同一個網站並不重要，也許是在另一個論譠、Blog 或特意發給 Bob 的郵件中。
+瀏覽器遇到 <img> 時，就會自動以 GET 請求 src 指定的網址，就這個情境來說，攻擊要能成立的前題，
+是 /project/1/destroy 這樣的請求就能刪除專案，這很顯然是 URL 設計時的不良，加上應用程式沒有在重大操作之前，
+進一步確認使用者身份與意圖而導致。
+
+target="_blank":開起新的網頁
+-->
